@@ -1,0 +1,10 @@
+## Methodology
+To configure Snort, we perform the following steps:
+1. Installing Snort on the Ubuntu desktop.
+2. Configuration of the `snort.conf` file for monitoring ICMP packets.
+3. Configuring the `local.rules` file to alert/drop ICMP packets or TCP/HTTP connections, etc.
+4. Configuring network segmentation on machines on an internal network (for example 192.168.1.1/24 & 192.168.1.2/24) so ​​that Snort can monitor the internal network
+5. Running tests with the `ping` command while Snort is running to test its operation.
+
+## Results
+After running the `ping` tests and checking the Snort logs, it was possible to detect malicious packets being blocked.
