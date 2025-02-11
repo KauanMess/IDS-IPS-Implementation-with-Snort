@@ -14,11 +14,12 @@ The project provides a ready-to-use configuration for Snort, including:
 
 1. [Dependencies](#dependencies)
 2. [Setup Instructions](#setup-instructions)
-3. [Usage](#usage)
-4. [Project Structure](#project-structure)
-5. [Testing the Configuration](#testing-the-configuration)
-6. [Contributing](#contributing)
-7. [License](#license)
+3. [Assign IP](#assign-ip)
+4. [Assign Interface](#assign-interface)
+5. [Usage](#usage)
+6. [Project Structure](#project-structure)
+7. [Testing the Configuration](#testing-the-configuration)
+8. [Contributing](#contributing)
 
 ---
 
@@ -34,6 +35,11 @@ To run this project, ensure you have the following installed:
 - **bison**
 - **flex**
 - **iptables**
+
+Remember to activate promiscuous mode and place all machines on an internal network/bridge in your virtual machine so that snort can act as an IDS/IPS, in this case we use VirtualBox but you just need to activate it too, as in the following image:
+
+![Screenshot_11](https://github.com/user-attachments/assets/4d677551-db38-4cde-9de3-389098a982e4)
+
 
 Install dependencies using the following command:
 
@@ -66,17 +72,48 @@ sudo apt update && sudo apt install -y build-essential libpcap-dev libpcre3-dev 
 
 ---
 
+## Assign IP
+
+- Check IP addresses
+  ```bash
+  ip a
+  ```
+- Add IP and mask to all machines on the network
+  ```bash
+  sudo ip addr add 192.168.x.x/24 dev <interface>
+  ```
+  
+---
+## Assign Interface
+
+- Here we will be using two interfaces, one for input and one for output, you can check and change them as follows:
+```bash
+ip a
+ip link set <interface> promisc on
+ip link set <interface> up
+ip a
+```
+- You will see something like:
+
+![Screenshot_12](https://github.com/user-attachments/assets/afa33063-0a8f-4a8a-9a93-c00e04e72cb7)
+
 ## Usage
 
 - **Start Snort in Inline Mode**:
 
   ```bash
-  sudo snort -Q -c /etc/snort/snort.conf -i <interface>
+  sudo snort -A console -Q -c /etc/snort/snort.conf -i <interface>:<interface>
   ```
 
-  Replace `<interface>` with the network interface (e.g., `eth0`).
+  Replace `<interface>` with the network interface (e.g., `eth0:wlan0`).
 
-- **Check Alerts**: Alerts are stored in `/var/log/snort/alert` by default. Use the following command to view them:
+  Here we use 3 machines (the Server, Kali Linux and Metaspoitable) you can see that pings are also blocked not only when done on the Server, but on any device on the network:
+
+  ![Screenshot_8](https://github.com/user-attachments/assets/d609113b-1918-468f-b79a-141bda57613c)
+
+   
+
+- **Check Alerts**: By using the -A console syntax we can see it in real time, but you can consult the saved log alerts in `/var/log/snort/alert` by default. Use the following command to view them:
 
   ```bash
   tail -f /var/log/snort/alert
