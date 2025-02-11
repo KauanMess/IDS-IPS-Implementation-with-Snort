@@ -10,8 +10,11 @@ echo "### Updating the system..."
 apt-get update && apt-get upgrade -y
 
 echo "### Installing Snort dependencies..."
-apt-get install -y build-essential libpcap-dev libpcre3-dev libdnet-dev zlib1g-dev \
-    libdaq-dev libluajit-5.1-dev bison flex libssl-dev libnetfilter-queue-dev iptables
+apt-get install -y build-essential zlib1g-dev \
+      libssl-dev libnetfilter-queue-dev iptables
+
+apt install -y libpcap-dev libpcre3-dev libpcre2-dev libdaq-dev \
+     bison flex libluajit-5.1-dev libdumbnet-dev libssl-dev
 
 echo "### Downloading and installing Snort..."
 SNORT_VERSION="2.9.20" # Change this to the latest version if necessary
