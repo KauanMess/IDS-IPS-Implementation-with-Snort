@@ -17,3 +17,8 @@ The objective of this project is to demonstrate how Snort can be configured to b
 1. Clone this repository:
    ```bash
    git clone https://github.com/seu-usuario/IDS-Implementation-with-Snort.git
+2. Install Snort.
+   ```bash
+   apt-get install snort
+4. Run the scripts to configure and test Snort.   
+5. In case of interface-related errors, change the name of your interface in the script.sh file
