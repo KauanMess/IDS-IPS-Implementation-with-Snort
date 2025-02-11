@@ -1,0 +1,17 @@
+# $Id: local.rules,v 1.11 2004/07/23 20:15:44 bmc Exp $
+# ----------------
+# LOCAL RULES
+# ----------------
+# This file intentionally does not come with signatures.  Put your local
+# additions here.
+# Permitir tráfego
+#alert tcp any any -> any any (msg:"ALERTA: Conexão de entrada"; sid:1000001;)
+
+# Bloquear tráfego
+#alert icmp any any -> any any (msg:"ICMP Packet Detected"; sid:1000002;)
+drop icmp any any -> any any (msg:"Blocking ICMP Packet"; sid:1000003;)
+drop tcp any 22 -> any any (msg:"Blocking SSH Connection"; sid:1000004;)
+drop tcp any 80 -> any any (msg:"Blocking HTTP Connection"; sid:1000004;)
+
+#drop http any any -> any any (msg:"Blocking HTTP Connection"; sid:1000005;)
+#pass icmp 192.168.15.1 any -> 192.168.15.6 any (msg:"Ignoring ICMP PING"; sid:1000001;)
