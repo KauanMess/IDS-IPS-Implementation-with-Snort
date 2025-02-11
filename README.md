@@ -24,7 +24,6 @@ The objective of this project is to demonstrate how Snort can be configured to b
 4. Run the script to configure and test Snort.
    ```
    ./setup.sh
-
 6. You can edit and add rules in /etc/snort/rules/local.rules for example:(drop tcp any 80 -> any any (msg:"Blocking HTTP Connection"; sid:1000004;)
 
 7. You can consult the existing files in the **docs** folder to help you.
