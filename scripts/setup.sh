@@ -16,6 +16,9 @@ apt-get install -y build-essential zlib1g-dev \
 apt install -y libpcap-dev libpcre3-dev libpcre2-dev libdaq-dev \
      bison flex libluajit-5.1-dev libdumbnet-dev libssl-dev
 
+export CFLAGS="-I/usr/include/tirpc"
+export LDFLAGS="-ltirpc"
+
 echo "### Downloading and installing Snort..."
 SNORT_VERSION="2.9.20" # Change this to the latest version if necessary
 wget https://www.snort.org/downloads/snort/snort-$SNORT_VERSION.tar.gz
