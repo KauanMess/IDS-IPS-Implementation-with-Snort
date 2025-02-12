@@ -64,4 +64,4 @@ iptables -A INPUT -j NFQUEUE --queue-num 1
 iptables -A OUTPUT -j NFQUEUE --queue-num 1
 
 echo "### Testing Snort in inline mode..."
-snort -Q --daq nfq --daq-var queue=1 -c $SNORT_CONF
+snort -A console -c /etc/snort/snort.conf
