@@ -1,6 +1,6 @@
 # IDS/IPS Implementation with Snort
 
-This project demonstrates how to set up and configure an Intrusion Detection System (IDS) and Intrusion Prevention System (IPS) using Snort in inline mode. The purpose is to alert and drop malicious traffic effectively, including ICMP, TCP, and HTTP packets.
+This project demonstrates how to set up and configure an Intrusion Detection System (IDS) or Intrusion Prevention System (IPS) using Snort in inline mode. The purpose is to alert and drop malicious traffic effectively, including ICMP, TCP, and HTTP packets.
 
 ## Project Overview
 
@@ -36,7 +36,7 @@ To run this project, ensure you have the following installed:
 - **flex**
 - **iptables**
 
-Remember to activate promiscuous mode and place all machines on an internal network/bridge in your virtual machine so that snort can act as an IDS/IPS, in this case we use VirtualBox but you just need to activate it too, as in the following image:
+Remember to activate promiscuous mode and place all machines on an internal network/bridge in your virtual machine so that snort can act as an IPS, in this case we use VirtualBox but you just need to activate it too, as in the following image:
 
 ![Screenshot_11](https://github.com/user-attachments/assets/4d677551-db38-4cde-9de3-389098a982e4)
 
@@ -100,7 +100,7 @@ ip a
 ## Usage
 
 - **Start Snort in Inline Mode**:
-
+  As snort inline mode requires 2 network interfaces, we will use it in IDS mode where anyone can use it, but if you want to use it as an IPS just use the syntax:
   ```bash
   sudo snort -A console -Q -c /etc/snort/snort.conf -i <interface>:<interface>
   ```
@@ -111,7 +111,6 @@ ip a
 
   ![Screenshot_8](https://github.com/user-attachments/assets/d609113b-1918-468f-b79a-141bda57613c)
 
-   
 
 - **Check Alerts**: By using the -A console syntax we can see it in real time, but you can consult the saved log alerts in `/var/log/snort/alert` by default. Use the following command to view them:
 
