@@ -102,7 +102,7 @@ ip a
 - **Start Snort in Inline Mode**:
   As snort inline mode requires 2 network interfaces, we will use it in IDS mode where anyone can use it, but if you want to use it as an IPS just use the syntax:
   ```bash
-  sudo snort -A console -Q -c /etc/snort/snort.conf -i <interface>:<interface>
+  sudo snort -Q --daq afpacket -i <interface>:<interface> -c /etc/snort/snort.conf -A console
   ```
 
   Replace `<interface>` with the network interface (e.g., `eth0:wlan0`).
