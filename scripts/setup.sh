@@ -14,7 +14,8 @@ apt-get install -y build-essential zlib1g-dev \
       libssl-dev libnetfilter-queue-dev iptables
 
 apt install -y libpcap-dev libpcre3-dev libpcre2-dev libdaq-dev \
-     bison flex libluajit-5.1-dev libdumbnet-dev libssl-dev
+     bison flex libluajit-5.1-dev libdumbnet-dev libssl-dev \
+     libc6 libc6dev gcc g++
 
 export CFLAGS="-I/usr/include/tirpc"
 export LDFLAGS="-ltirpc"
