@@ -16,6 +16,10 @@ apt-get install -y build-essential zlib1g-dev \
 apt install -y libpcap-dev libpcre3-dev libpcre2-dev libdaq-dev \
      bison flex libluajit-5.1-dev libdumbnet-dev libssl-dev \
      libc6 libc6dev gcc g++
+apt install --reinstall build-essential gcc g++ -y
+apt install --reinstall libc6 libc6-dev -y
+
+sudo ldconfig
 
 export CFLAGS="-I/usr/include/tirpc"
 export LDFLAGS="-ltirpc"
@@ -26,7 +30,7 @@ wget https://www.snort.org/downloads/snort/snort-$SNORT_VERSION.tar.gz
 tar -xvf snort-$SNORT_VERSION.tar.gz
 cd snort-$SNORT_VERSION
 
-./configure --enable-sourcefire
+./configure --enable-optimizations --includedir=/usr/include/ntirpc/rpc
 make
 make install
 ldconfig
@@ -49,20 +53,12 @@ echo "### Setting permissions..."
 chmod -R 5775 /etc/snort
 chmod -R 5775 /var/log/snort
 
-echo "### Configuring the snort.conf file..."
-SNORT_CONF="/etc/snort/snort.conf"
-
-# Comment out other rule paths and add the custom local.rules
-sed -i 's/include \$RULE_PATH/# include \$RULE_PATH/' $SNORT_CONF
-echo "include \$RULE_PATH/local.rules" >> $SNORT_CONF
-echo "config policy_mode:inline" >> $SNORT_CONF
-
-echo "### Creating a simple rule to test inline mode..."
-echo 'alert icmp any any -> any any (msg:"ICMP Packet Detected"; sid:10000001; rev:001;)' > /etc/snort/rules/local.rules
+echo "### Creating a simple rule..."
+echo 'alert icmp any any -> any any (msg:"ICMP Packet Detected"; sid:10000001;)' > /etc/snort/rules/local.rules
 
 echo "### Setting up iptables to redirect packets to Snort..."
 iptables -A INPUT -j NFQUEUE --queue-num 1
 iptables -A OUTPUT -j NFQUEUE --queue-num 1
 
-echo "### Testing Snort in inline mode..."
+echo "### Testing Snort..."
 snort -A console -c /etc/snort/snort.conf
