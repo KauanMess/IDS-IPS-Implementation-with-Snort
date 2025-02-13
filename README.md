@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This project demonstrates how to set up and configure an Intrusion Detection System (IDS) or Intrusion Prevention System (IPS) using Snort in inline mode. The purpose is to alert and drop malicious traffic effectively, including ICMP, TCP, and HTTP packets.
+This project demonstrates how to set up and configure an Intrusion Detection System (IDS). The purpose is to alert malicious traffic effectively, including ICMP, TCP, and HTTP packets.
 
 The project provides a ready-to-use configuration for Snort, including:
 
@@ -47,8 +47,8 @@ Remember to activate promiscuous mode and place all machines on an internal netw
 1. **Clone the Repository**:
 
    ```bash
-   git clone https://github.com/KauanMess/IDS-IPS-Implementation-with-Snort.git
-   cd IDS-IPS-Implementation-with-Snort
+   git clone https://github.com/KauanMess/IDS-Implementation-with-Snort.git
+   cd IDS-Implementation-with-Snort
    ```
 
 2. **Run the Setup Script**: Execute the `setup.sh` script to install Snort and configure it for inline mode:
@@ -77,8 +77,7 @@ Remember to activate promiscuous mode and place all machines on an internal netw
 ---
 ## Assign Interface
 
-- If you are going to use it in IPS mode, remember that two network interfaces are required, otherwise only one is needed for IDS mode.
-- Here we will be using two interfaces, one for input and one for output, you can check and change them as follows:
+- Now let's edit the interface to monitor network traffic, you can check and change them as follows:
    ```bash
    ip a
    ip link set <interface> promisc on
@@ -86,27 +85,24 @@ Remember to activate promiscuous mode and place all machines on an internal netw
    ip a
    ```
 - You will see something like:
+  
+  ![Screenshot_12](https://github.com/user-attachments/assets/90bce3a3-ee6c-4b96-91a0-73341f021929)
 
-![Screenshot_12](https://github.com/user-attachments/assets/afa33063-0a8f-4a8a-9a93-c00e04e72cb7)
 
 ## Usage
 
-- **Start Snort in Inline Mode**:
-  As snort inline mode requires 2 network interfaces, we will use it in IDS mode where anyone can use it, but if you want to use it as an IPS just use the syntax:
+- **Start Snort**:
+  To use snort IDS mode is simple:
   ```bash
-  sudo snort -Q --daq afpacket -i <interface>:<interface> -c /etc/snort/snort.conf -A console
+  sudo snort -A console -c /etc/snort/snort.conf -i <interface>
   ```
 
-  Replace `<interface>` with the network interface (e.g., `eth0:wlan0`).
+  Replace `<interface>` with the network interface (e.g., `eth0`).
 
-  Here we use 3 machines (the Server, Kali Linux and Metaspoitable) you can see that pings are also blocked not only when done on the Server, but on any device on the network:
+  Here we use 3 machines (the Server, Kali Linux and Metaspoitable) you can see that pings are also alerteds not only when done on the Server, but on any device on the network:
 
   ![Screenshot_8](https://github.com/user-attachments/assets/d609113b-1918-468f-b79a-141bda57613c)
 
-  But as the focus is on it in IDS mode you can use the following syntax:
-  ```bash
-  snort -A console -c /etc/snort/snort.conf
-  ```
   
 - **Check Alerts**: By using the -A console syntax we can see it in real time, but you can consult the saved log alerts in `/var/log/snort/alert` by default. Use the following command to view them:
 
@@ -121,7 +117,7 @@ Remember to activate promiscuous mode and place all machines on an internal netw
 The repository is organized as follows:
 
    ```
-   IDS-IPS-Implementation-with-Snort/
+   IDS-Implementation-with-Snort/
    ├── README.md          # Project documentation
    ├── scripts/         # Automation scripts
    │   └── setup.sh   # Script to install Snort and dependencies
@@ -148,10 +144,9 @@ The repository is organized as follows:
    ssh user@<Snort_IP>
    ```
 
-   Check if alerts are generated or packets are dropped.
-
+   Check if alerts are generated.
 3. **Simulate HTTP Traffic**: Use tools like `curl` or a web browser to make HTTP requests to a server behind Snort and observe the behavior.
-   Here is a demonstration of a connection between machines where Snort is alerting and dropping packets between two machines:
+   Here is a demonstration of a connection between machines where Snort is alerting the packets between two machines:
 ---
 
 ## Contributing
