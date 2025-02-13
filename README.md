@@ -1,8 +1,8 @@
-# IDS/IPS Implementation with Snort
-
-This project demonstrates how to set up and configure an Intrusion Detection System (IDS) or Intrusion Prevention System (IPS) using Snort in inline mode. The purpose is to alert and drop malicious traffic effectively, including ICMP, TCP, and HTTP packets.
+# IDS Implementation with Snort
 
 ## Project Overview
+
+This project demonstrates how to set up and configure an Intrusion Detection System (IDS) or Intrusion Prevention System (IPS) using Snort in inline mode. The purpose is to alert and drop malicious traffic effectively, including ICMP, TCP, and HTTP packets.
 
 The project provides a ready-to-use configuration for Snort, including:
 
@@ -36,16 +36,9 @@ To run this project, ensure you have the following installed:
 - **flex**
 - **iptables**
 
-Remember to activate promiscuous mode and place all machines on an internal network/bridge in your virtual machine so that snort can act as an IPS, in this case we use VirtualBox but you just need to activate it too, as in the following image:
+Remember to activate promiscuous mode and place all machines on an internal network/bridge in your virtual machine so that snort can act as an IDS/IPS, in this case we use VirtualBox but you just need to activate it too, as in the following image:
 
 ![Screenshot_11](https://github.com/user-attachments/assets/4d677551-db38-4cde-9de3-389098a982e4)
-
-
-Install dependencies using the following command:
-
-```bash
-sudo apt update && sudo apt install -y build-essential libpcap-dev libpcre3-dev libdnet-dev bison flex iptables
-```
 
 ---
 
@@ -64,14 +57,12 @@ sudo apt update && sudo apt install -y build-essential libpcap-dev libpcre3-dev 
    sudo ./scripts/setup.sh
    ```
 
-3. **Verify Configuration**: Check if Snort is correctly installed and running:
-
+3. When the installation is complete, snort will already be running in IDS mode, you can stop it with:
    ```bash
-   snort -V
+   ctrl+z
    ```
-
----
-
+   ---
+   
 ## Assign IP
 
 - Check IP addresses
@@ -86,13 +77,14 @@ sudo apt update && sudo apt install -y build-essential libpcap-dev libpcre3-dev 
 ---
 ## Assign Interface
 
+- If you are going to use it in IPS mode, remember that two network interfaces are required, otherwise only one is needed for IDS mode.
 - Here we will be using two interfaces, one for input and one for output, you can check and change them as follows:
-```bash
-ip a
-ip link set <interface> promisc on
-ip link set <interface> up
-ip a
-```
+   ```bash
+   ip a
+   ip link set <interface> promisc on
+   ip link set <interface> up
+   ip a
+   ```
 - You will see something like:
 
 ![Screenshot_12](https://github.com/user-attachments/assets/afa33063-0a8f-4a8a-9a93-c00e04e72cb7)
@@ -111,7 +103,11 @@ ip a
 
   ![Screenshot_8](https://github.com/user-attachments/assets/d609113b-1918-468f-b79a-141bda57613c)
 
-
+  But as the focus is on it in IDS mode you can use the following syntax:
+  ```bash
+  snort -A console -c /etc/snort/snort.conf
+  ```
+  
 - **Check Alerts**: By using the -A console syntax we can see it in real time, but you can consult the saved log alerts in `/var/log/snort/alert` by default. Use the following command to view them:
 
   ```bash
@@ -124,17 +120,17 @@ ip a
 
 The repository is organized as follows:
 
-```
-IDS-IPS-Implementation-with-Snort/
-├── README.md          # Project documentation
-├── scripts/         # Automation scripts
-│   └── setup.sh   # Script to install Snort and dependencies
-├── config/          # Configuration files
-│   ├── snort.conf # Main Snort configuration file
-│   └── local.rules # Custom rules for Snort
-```
+   ```
+   IDS-IPS-Implementation-with-Snort/
+   ├── README.md          # Project documentation
+   ├── scripts/         # Automation scripts
+   │   └── setup.sh   # Script to install Snort and dependencies
+   ├── config/          # Configuration files
+   │   ├── snort.conf # Main Snort configuration file
+   │   └── local.rules # Custom rules for Snort
+   ```
 
----
+   ---
 
 ## Testing the Configuration
 
@@ -155,7 +151,7 @@ IDS-IPS-Implementation-with-Snort/
    Check if alerts are generated or packets are dropped.
 
 3. **Simulate HTTP Traffic**: Use tools like `curl` or a web browser to make HTTP requests to a server behind Snort and observe the behavior.
-
+   Here is a demonstration of a connection between machines where Snort is alerting and dropping packets between two machines:
 ---
 
 ## Contributing
