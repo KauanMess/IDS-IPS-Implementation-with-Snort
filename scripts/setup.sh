@@ -42,6 +42,9 @@ if ! command -v snort &> /dev/null; then
 fi
 
 echo "### Configuring Snort directories and libraries..."
+cd ../../docs
+cp snort.conf /etc/snort/snort.conf
+cp unicode.map /etc/snort
 mkdir -p /etc/snort/rules
 mkdir -p /var/log/snort
 mkdir -p /usr/local/lib/snort_dynamicrules
