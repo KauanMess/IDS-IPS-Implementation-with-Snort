@@ -147,6 +147,9 @@ The repository is organized as follows:
    Check if alerts are generated.
 3. **Simulate HTTP Traffic**: Use tools like `curl` or a web browser to make HTTP requests to a server behind Snort and observe the behavior.
    Here is a demonstration of a connection between machines where Snort is alerting the packets between two machines:
+   
+   ![0b29352844d003a657f5b3184542ab74](https://github.com/user-attachments/assets/64d0a4af-a7c0-4cdf-a6a3-42d1516648d9)
+
 ---
 
 ## Contributing
