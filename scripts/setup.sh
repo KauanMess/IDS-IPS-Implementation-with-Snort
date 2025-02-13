@@ -11,15 +11,12 @@ apt-get update && apt-get upgrade -y
 
 echo "### Installing Snort dependencies..."
 apt-get install -y build-essential zlib1g-dev \
-      libssl-dev libnetfilter-queue-dev iptables
+      libssl-dev libnetfilter-queue-dev iptables \
+      libpcap-dev libpcre3-dev libpcre2-dev libdaq-dev \
+      bison flex libluajit-5.1-dev libdumbnet-dev \
+      libc6 libc6-dev gcc g++ libtirpc-dev
 
-apt install -y libpcap-dev libpcre3-dev libpcre2-dev libdaq-dev \
-     bison flex libluajit-5.1-dev libdumbnet-dev libssl-dev \
-     libc6 libc6-dev gcc g++ libtirpc-dev
-apt install --reinstall build-essential gcc g++ -y
-apt install --reinstall libc6 libc6-dev -y
-
-sudo ldconfig
+ldconfig
 
 export CFLAGS="-I/usr/include/tirpc"
 export LDFLAGS="-ltirpc"
@@ -27,11 +24,12 @@ export LDFLAGS="-ltirpc"
 echo "### Downloading and installing Snort..."
 SNORT_VERSION="2.9.20" # Change this to the latest version if necessary
 wget https://www.snort.org/downloads/snort/snort-$SNORT_VERSION.tar.gz
+
 tar -xvf snort-$SNORT_VERSION.tar.gz
-cd snort-$SNORT_VERSION
+cd snort-$SNORT_VERSION || exit
 
 ./configure --enable-optimizations --includedir=/usr/include/ntirpc/rpc
-make
+make -j$(nproc)
 make install
 ldconfig
 
@@ -41,132 +39,68 @@ if ! command -v snort &> /dev/null; then
     exit 1
 fi
 
-echo "### Configuring Snort directories and libraries..."
-cd ../../docs
-cp snort.conf /etc/snort/snort.conf
-cp unicode.map /etc/snort
+# Ensure /etc/snort is a directory
+if [ -e /etc/snort ] && [ ! -d /etc/snort ]; then
+    rm -f /etc/snort
+fi
 mkdir -p /etc/snort/rules
 mkdir -p /var/log/snort
 mkdir -p /usr/local/lib/snort_dynamicrules
-touch /etc/snort/rules/app-detect.rules
-touch /etc/snort/rules/attack-responses.rules
-touch /etc/snort/rules/backdoor.rules
-touch /etc/snort/rules/bad-traffic.rules
-touch /etc/snort/rules/blacklist.rules
-touch /etc/snort/rules/botnet-cnc.rules
-touch /etc/snort/rules/browser-chrome.rules
-touch /etc/snort/rules/browser-firefox.rules
-touch /etc/snort/rules/browser-ie.rules
-touch /etc/snort/rules/browser-other.rules
-touch /etc/snort/rules/browser-plugins.rules
-touch /etc/snort/rules/browser-webkit.rules
-touch /etc/snort/rules/chat.rules
-touch /etc/snort/rules/content-replace.rules
-touch /etc/snort/rules/ddos.rules
-touch /etc/snort/rules/dns.rules
-touch /etc/snort/rules/dos.rules
-touch /etc/snort/rules/experimental.rules
-touch /etc/snort/rules/exploit-kit.rules
-touch /etc/snort/rules/exploit.rules
-touch /etc/snort/rules/file-executable.rules
-touch /etc/snort/rules/file-flash.rules
-touch /etc/snort/rules/file-identify.rules
-touch /etc/snort/rules/file-image.rules
-touch /etc/snort/rules/file-multimedia.rules
-touch /etc/snort/rules/file-office.rules
-touch /etc/snort/rules/file-other.rules
-touch /etc/snort/rules/file-pdf.rules
-touch /etc/snort/rules/finger.rules
-touch /etc/snort/rules/ftp.rules
-touch /etc/snort/rules/icmp-info.rules
-touch /etc/snort/rules/icmp.rules
-touch /etc/snort/rules/imap.rules
-touch /etc/snort/rules/indicator-compromise.rules
-touch /etc/snort/rules/indicator-obfuscation.rules
-touch /etc/snort/rules/indicator-shellcode.rules
-touch /etc/snort/rules/info.rules
-touch /etc/snort/rules/malware-backdoor.rules
-touch /etc/snort/rules/malware-cnc.rules
-touch /etc/snort/rules/malware-other.rules
-touch /etc/snort/rules/malware-tools.rules
-touch /etc/snort/rules/misc.rules
-touch /etc/snort/rules/multimedia.rules
-touch /etc/snort/rules/mysql.rules
-touch /etc/snort/rules/netbios.rules
-touch /etc/snort/rules/nntp.rules
-touch /etc/snort/rules/oracle.rules
-touch /etc/snort/rules/os-linux.rules
-touch /etc/snort/rules/os-other.rules
-touch /etc/snort/rules/os-solaris.rules
-touch /etc/snort/rules/os-windows.rules
-touch /etc/snort/rules/other-ids.rules
-touch /etc/snort/rules/p2p.rules
-touch /etc/snort/rules/phishing-spam.rules
-touch /etc/snort/rules/policy-multimedia.rules
-touch /etc/snort/rules/policy-other.rules
-touch /etc/snort/rules/policy.rules
-touch /etc/snort/rules/policy-social.rules
-touch /etc/snort/rules/policy-spam.rules
-touch /etc/snort/rules/pop2.rules
-touch /etc/snort/rules/pop3.rules
-touch /etc/snort/rules/protocol-finger.rules
-touch /etc/snort/rules/protocol-ftp.rules
-touch /etc/snort/rules/protocol-icmp.rules
-touch /etc/snort/rules/protocol-imap.rules
-touch /etc/snort/rules/protocol-pop.rules
-touch /etc/snort/rules/protocol-services.rules
-touch /etc/snort/rules/protocol-voip.rules
-touch /etc/snort/rules/pua-adware.rules
-touch /etc/snort/rules/pua-other.rules
-touch /etc/snort/rules/pua-p2p.rules
-touch /etc/snort/rules/pua-toolbars.rules
-touch /etc/snort/rules/rpc.rules
-touch /etc/snort/rules/rservices.rules
-touch /etc/snort/rules/scada.rules
-touch /etc/snort/rules/scan.rules
-touch /etc/snort/rules/server-apache.rules
-touch /etc/snort/rules/server-iis.rules
-touch /etc/snort/rules/server-mail.rules
-touch /etc/snort/rules/server-mssql.rules
-touch /etc/snort/rules/server-mysql.rules
-touch /etc/snort/rules/server-oracle.rules
-touch /etc/snort/rules/server-other.rules
-touch /etc/snort/rules/server-webapp.rules
-touch /etc/snort/rules/shellcode.rules
-touch /etc/snort/rules/smtp.rules
-touch /etc/snort/rules/snmp.rules
-touch /etc/snort/rules/specific-threats.rules
-touch /etc/snort/rules/spyware-put.rules
-touch /etc/snort/rules/sql.rules
-touch /etc/snort/rules/telnet.rules
-touch /etc/snort/rules/tftp.rules
-touch /etc/snort/rules/virus.rules
-touch /etc/snort/rules/voip.rules
-touch /etc/snort/rules/web-activex.rules
-touch /etc/snort/rules/web-attacks.rules
-touch /etc/snort/rules/web-cgi.rules
-touch /etc/snort/rules/web-client.rules
-touch /etc/snort/rules/web-coldfusion.rules
-touch /etc/snort/rules/web-frontpage.rules
-touch /etc/snort/rules/web-iis.rules
-touch /etc/snort/rules/web-misc.rules
-touch /etc/snort/rules/web-php.rules
-touch /etc/snort/rules/x11.rules
-touch /etc/snort/rules/white_list.rules
-touch /etc/snort/rules/black_list.rules
-touch /etc/snort/rules/local.rules
-cp etc/*.conf* /etc/snort/
 
-echo "### Setting permissions..."
+# Copy modified configuration files from /docs to /etc/snort
+cd ../../docs || exit
+cp snort.conf /etc/snort/snort.conf
+cp unicode.map /etc/snort/
+cd - || exit
+
+# Creating empty rule files
+RULES=(
+    "app-detect.rules" "attack-responses.rules" "backdoor.rules"
+    "bad-traffic.rules" "blacklist.rules" "botnet-cnc.rules"
+    "browser-chrome.rules" "browser-firefox.rules" "browser-ie.rules"
+    "browser-other.rules" "browser-plugins.rules" "browser-webkit.rules"
+    "chat.rules" "content-replace.rules" "ddos.rules" "dns.rules"
+    "dos.rules" "experimental.rules" "exploit-kit.rules" "exploit.rules"
+    "file-executable.rules" "file-flash.rules" "file-identify.rules"
+    "file-image.rules" "file-multimedia.rules" "file-office.rules"
+    "file-other.rules" "file-pdf.rules" "finger.rules" "ftp.rules"
+    "icmp-info.rules" "icmp.rules" "imap.rules" "indicator-compromise.rules"
+    "indicator-obfuscation.rules" "indicator-shellcode.rules" "info.rules"
+    "malware-backdoor.rules" "malware-cnc.rules" "malware-other.rules"
+    "malware-tools.rules" "misc.rules" "multimedia.rules" "mysql.rules"
+    "netbios.rules" "nntp.rules" "oracle.rules" "os-linux.rules"
+    "os-other.rules" "os-solaris.rules" "os-windows.rules"
+    "other-ids.rules" "p2p.rules" "phishing-spam.rules"
+    "policy-multimedia.rules" "policy-other.rules" "policy.rules"
+    "policy-social.rules" "policy-spam.rules" "pop2.rules" "pop3.rules"
+    "protocol-finger.rules" "protocol-ftp.rules" "protocol-icmp.rules"
+    "protocol-imap.rules" "protocol-pop.rules" "protocol-services.rules"
+    "protocol-voip.rules" "pua-adware.rules" "pua-other.rules"
+    "pua-p2p.rules" "pua-toolbars.rules" "rpc.rules" "rservices.rules"
+    "scada.rules" "scan.rules" "server-apache.rules" "server-iis.rules"
+    "server-mail.rules" "server-mssql.rules" "server-mysql.rules"
+    "server-oracle.rules" "server-other.rules" "server-webapp.rules"
+    "shellcode.rules" "smtp.rules" "snmp.rules" "specific-threats.rules"
+    "spyware-put.rules" "sql.rules" "telnet.rules" "tftp.rules"
+    "virus.rules" "voip.rules" "web-activex.rules" "web-attacks.rules"
+    "web-cgi.rules" "web-client.rules" "web-coldfusion.rules"
+    "web-frontpage.rules" "web-iis.rules" "web-misc.rules"
+    "web-php.rules" "x11.rules" "white_list.rules" "black_list.rules"
+    "local.rules"
+)
+
+for rule in "${RULES[@]}"; do
+    touch "/etc/snort/rules/$rule"
+done
+
+# Set permissions
 chmod -R 5775 /etc/snort
 chmod -R 5775 /var/log/snort
 
-echo "### Creating a simple rule..."
+# Ensure the local.rules file exists before writing to it
+touch /etc/snort/rules/local.rules
 echo 'alert icmp any any -> any any (msg:"ICMP Packet Detected"; sid:10000001;)' > /etc/snort/rules/local.rules
 
-echo "### Setting up iptables to redirect packets to Snort..."
-iptables -A INPUT -j NFQUEUE --queue-num 1
-iptables -A OUTPUT -j NFQUEUE --queue-num 1
-
+# Test Snort
 echo "### Testing Snort..."
 snort -A console -c /etc/snort/snort.conf
