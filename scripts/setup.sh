@@ -15,7 +15,7 @@ apt-get install -y build-essential zlib1g-dev \
 
 apt install -y libpcap-dev libpcre3-dev libpcre2-dev libdaq-dev \
      bison flex libluajit-5.1-dev libdumbnet-dev libssl-dev \
-     libc6 libc6-dev gcc g++
+     libc6 libc6-dev gcc g++ libtirpc-dev
 apt install --reinstall build-essential gcc g++ -y
 apt install --reinstall libc6 libc6-dev -y
 
