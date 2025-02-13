@@ -7,4 +7,4 @@ To configure Snort, we perform the following steps:
 5. Running tests with the `ping` command while Snort is running to test its operation.
 
 ## Results
-After running the `ping` tests and checking the Snort logs, it was possible to detect malicious packets being blocked.
+After running the `ping` tests and checking the Snort logs, it was possible to detect malicious packets.
